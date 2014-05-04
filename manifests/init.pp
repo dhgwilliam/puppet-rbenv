@@ -56,7 +56,7 @@ class rbenv (
 
   exec { 'git-clone-rbenv':
     command => "/usr/bin/git clone ${rbenv::repo_path} ${install_dir}",
-    creates => $install_dir,
+    creates => "${install_dir}/.git",
     user    => $owner,
     require => Package['git'],
   }
