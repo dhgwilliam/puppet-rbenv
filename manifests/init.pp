@@ -54,10 +54,10 @@ class rbenv (
 ) inherits rbenv::deps {
   include rbenv::deps
 
-  exec { 'git-clone-rbenv':
-    command => "/usr/bin/git clone ${rbenv::repo_path} ${install_dir}",
-    creates => "${install_dir}/.git",
-    user    => $owner,
+  vcsrepo { $install_dir:
+    ensure => present,
+    source => $rbenv::repo_path,
+    user   => $owner,
     require => Package['git'],
   }
 
@@ -79,6 +79,6 @@ class rbenv (
     mode      => '0775'
   }
 
-  Exec['git-clone-rbenv'] -> File[$install_dir]
+  Vcsrepo[$install_dir] -> File[$install_dir]
 
 }
