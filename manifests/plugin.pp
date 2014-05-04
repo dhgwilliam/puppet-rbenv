@@ -27,11 +27,9 @@ define rbenv::plugin(
 
   $plugin = split($name, '/') # divide plugin name into array
 
-  exec { "install-${name}":
-    command => "/usr/bin/git clone https://github.com/${name}.git",
-    cwd     => "${install_dir}/plugins",
-    onlyif  => "/usr/bin/test -d ${install_dir}/plugins",
-    unless  => "/usr/bin/test -d ${install_dir}/plugins/${plugin[1]}",
+  vcsrepo { "${install_dir}/plugins/${plugin[1]}":
+    ensure => present,
+    source => "https://github.com/${name}.git",
   }~>
   exec { "rbenv-permissions-${name}":
     command     => "/bin/chown -R ${rbenv::owner}:${rbenv::group} ${install_dir} && /bin/chmod -R g+w ${install_dir}",
